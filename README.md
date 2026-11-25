@@ -5,9 +5,11 @@ A bilingual (Arabic / English) school website for **Al-Madinah Al-Munawwarah Sch
 Node.js + Express backend, JSON-file data storage, working contact and admissions
 forms, and a rich animated frontend (3D hero cube, tilt cards, parallax, counters).
 
-> **Placeholder data note:** Contact details (address, phone, email), teacher names/photos,
+**Location:** Alshohda, Sayhout — الشهداء، سيحوت
+
+> **Placeholder data note:** Contact details (phone, email), teacher names/photos,
 > gallery photos, testimonials and event dates are **sample placeholders** — the school
-> still needs to supply the real details. Nothing on the site invents a real address,
+> still needs to supply the real details. Nothing on the site invents a real
 > phone number or enrolment figures; the stat counters use only generic values
 > (2 levels, 2 languages, 7+ sections, 100% commitment).
 
