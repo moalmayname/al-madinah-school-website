@@ -1,0 +1,1 @@
+{"dependencies":{"express":"^4.19.2"},"description":"Al-Madinah Al-Munawwarah School — bilingual (Arabic/English) school website with a Node.js + Express backend.","engines":{"node":">=18"},"main":"server/server.js","name":"al-madinah-school-website","private":true,"scripts":{"dev":"node --watch server/server.js","start":"node server/server.js"},"version":"2.0.0"}

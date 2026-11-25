@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مدرسة المدينة المنورة | Al-Madinah Al-Munawwarah School</title>
+<meta name="description" content="Al-Madinah Al-Munawwarah School — bilingual Arabic & English school for primary and secondary students. مدرسة المدينة المنورة — مدرسة ثنائية اللغة للمرحلتين الابتدائية والثانوية.">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<!-- ======================= NAVBAR ======================= -->
+<header class="navbar" id="top">
+  <div class="nav-inner">
+    <a class="brand" href="#home">
+      <span class="logo">✦</span>
+      <span class="brand-text" data-i18n="brand">مدرسة المدينة المنورة</span>
+    </a>
+    <button class="burger" id="burger" aria-label="Menu" aria-expanded="false">☰</button>
+    <nav class="nav-links" id="navLinks">
+      <a href="#home" data-i18n="nav_home">الرئيسية</a>
+      <a href="#about" data-i18n="nav_about">عن المدرسة</a>
+      <a href="#academics" data-i18n="nav_academics">المراحل الدراسية</a>
+      <a href="#teachers" data-i18n="nav_teachers">المعلمون</a>
+      <a href="#news" data-i18n="nav_news">الأخبار والفعاليات</a>
+      <a href="#gallery" data-i18n="nav_gallery">المعرض</a>
+      <a href="#admissions" data-i18n="nav_admissions">التسجيل</a>
+      <a href="#contact" data-i18n="nav_contact">تواصل معنا</a>
+      <button class="lang-btn" id="langBtn" type="button">English</button>
+    </nav>
+  </div>
+</header>
+
+<!-- ======================= HERO ======================= -->
+<div class="hero-wrap" id="home">
+  <div class="hero-bg" aria-hidden="true"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+  <div class="hero">
+    <div class="hero-copy reveal">
+      <span class="badge" data-i18n="hero_badge">مدرسة ثنائية اللغة • ابتدائي وثانوي</span>
+      <h1 data-i18n-html="hero_title">حيث يبدأ التعلّم، <span>وينمو المستقبل</span></h1>
+      <p data-i18n="hero_text">مدرسة المدينة المنورة — مدرسة ثنائية اللغة (العربية والإنجليزية) للمرحلتين الابتدائية والثانوية.</p>
+      <div class="cta">
+        <a class="btn" href="#admissions" data-i18n="hero_cta_apply">سجّل الآن</a>
+        <a class="btn gold outline" href="#about" data-i18n="hero_cta_discover">تعرّف علينا</a>
+      </div>
+    </div>
+    <div class="scene reveal" id="scene">
+      <span class="float f1">📚</span>
+      <span class="float f2">🎓</span>
+      <span class="float f3">✏️</span>
+      <span class="float f4">🌟</span>
+      <div class="cube" aria-hidden="true">
+        <div class="face">📖</div><div class="face">🔬</div><div class="face">🎨</div>
+        <div class="face">⚽</div><div class="face">💡</div><div class="face">🌍</div>
+      </div>
+      <div class="cube-shadow" aria-hidden="true"></div>
+    </div>
+  </div>
+  <div class="stats" id="statsBar"><!-- rendered by app.js --></div>
+</div>
+
+<!-- ======================= ABOUT ======================= -->
+<section id="about" class="reveal">
+  <h2 data-i18n="about_title">عن المدرسة</h2>
+  <p class="sub" data-i18n="about_sub"></p>
+  <div class="grid">
+    <article class="card tilt"><div class="icon">🌟</div><h3 data-i18n="vision_t"></h3><p data-i18n="vision_p"></p></article>
+    <article class="card tilt"><div class="icon">🎯</div><h3 data-i18n="mission_t"></h3><p data-i18n="mission_p"></p></article>
+    <article class="card tilt"><div class="icon">💛</div><h3 data-i18n="values_t"></h3><p data-i18n="values_p"></p></article>
+    <article class="card tilt gold-top"><div class="icon">🤝</div><h3 data-i18n="why_t"></h3><p data-i18n="why_p"></p></article>
+  </div>
+</section>
+
+<!-- ======================= ACADEMICS ======================= -->
+<section id="academics" class="reveal">
+  <h2 data-i18n="academics_title">المراحل الدراسية</h2>
+  <p class="sub" data-i18n="academics_sub"></p>
+
+  <div class="tabs" role="tablist">
+    <button class="tab active" id="tabPrimaryBtn" data-tab="primary" role="tab" data-i18n="tab_primary">🎒 الابتدائية</button>
+    <button class="tab" id="tabSecondaryBtn" data-tab="secondary" role="tab" data-i18n="tab_secondary">🎓 الثانوية</button>
+  </div>
+
+  <div class="tab-panel level primary" id="panel-primary">
+    <h3 data-i18n="primary_t"></h3>
+    <p data-i18n="primary_p"></p>
+    <h4 data-i18n="subjects_label"></h4>
+    <ul class="chips">
+      <li data-i18n="p_sub1"></li><li data-i18n="p_sub2"></li><li data-i18n="p_sub3"></li><li data-i18n="p_sub4"></li>
+      <li data-i18n="p_sub5"></li><li data-i18n="p_sub6"></li><li data-i18n="p_sub7"></li><li data-i18n="p_sub8"></li>
+    </ul>
+    <p class="focus"><strong data-i18n="focus_label"></strong>: <span data-i18n="p_focus"></span></p>
+  </div>
+
+  <div class="tab-panel level secondary hidden" id="panel-secondary">
+    <h3 data-i18n="secondary_t"></h3>
+    <p data-i18n="secondary_p"></p>
+    <h4 data-i18n="subjects_label"></h4>
+    <ul class="chips">
+      <li data-i18n="s_sub1"></li><li data-i18n="s_sub2"></li><li data-i18n="s_sub3"></li><li data-i18n="s_sub4"></li>
+      <li data-i18n="s_sub5"></li><li data-i18n="s_sub6"></li><li data-i18n="s_sub7"></li><li data-i18n="s_sub8"></li>
+    </ul>
+    <p class="focus"><strong data-i18n="focus_label"></strong>: <span data-i18n="s_focus"></span></p>
+  </div>
+
+  <div class="timetable">
+    <h3 data-i18n="timetable_title"></h3>
+    <div class="tt-rows">
+      <div class="tt-row tt-head"><span data-i18n="tt_period"></span><span data-i18n="tt_primary"></span><span data-i18n="tt_secondary"></span></div>
+      <div class="tt-row"><span>1</span><span data-i18n="tt1"></span><span data-i18n="tt1"></span></div>
+      <div class="tt-row"><span>2</span><span data-i18n="tt2"></span><span data-i18n="tt2"></span></div>
+      <div class="tt-row"><span>3</span><span data-i18n="tt3"></span><span data-i18n="tt3"></span></div>
+      <div class="tt-row"><span>—</span><span data-i18n="tt4"></span><span data-i18n="tt4"></span></div>
+      <div class="tt-row"><span>4</span><span data-i18n="tt5"></span><span data-i18n="tt5"></span></div>
+      <div class="tt-row"><span>5</span><span data-i18n="tt6"></span><span data-i18n="tt6"></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= TEACHERS ======================= -->
+<section id="teachers" class="reveal">
+  <h2 data-i18n="teachers_title">معلمونا</h2>
+  <p class="sub" data-i18n="teachers_sub"></p>
+  <div class="grid" id="teachersGrid"><!-- rendered by app.js --></div>
+</section>
+
+<!-- ======================= NEWS & EVENTS ======================= -->
+<section id="news" class="reveal">
+  <h2 data-i18n="news_title">الأخبار والفعاليات</h2>
+  <p class="sub" data-i18n="news_sub"></p>
+  <h3 class="col-title" data-i18n="news_label"></h3>
+  <div id="newsList"><!-- rendered by app.js --></div>
+  <h3 class="col-title" data-i18n="events_label"></h3>
+  <div class="grid" id="eventsGrid"><!-- rendered by app.js --></div>
+</section>
+
+<!-- ======================= GALLERY ======================= -->
+<section id="gallery" class="reveal">
+  <h2 data-i18n="gallery_title">المعرض</h2>
+  <p class="sub" data-i18n="gallery_sub"></p>
+  <div class="gallery" id="galleryGrid"><!-- rendered by app.js --></div>
+</section>
+
+<!-- ======================= TESTIMONIALS ======================= -->
+<section id="testimonials" class="reveal">
+  <h2 data-i18n="testi_title">ماذا تقول الأسر؟</h2>
+  <div class="carousel" id="carousel">
+    <button class="car-btn" id="carPrev" aria-label="Previous">‹</button>
+    <div class="car-slide" id="carSlide"><!-- rendered by app.js --></div>
+    <button class="car-btn" id="carNext" aria-label="Next">›</button>
+  </div>
+  <div class="car-dots" id="carDots"></div>
+</section>
+
+<!-- ======================= FAQ ======================= -->
+<section id="faq" class="reveal">
+  <h2 data-i18n="faq_title">الأسئلة الشائعة</h2>
+  <div class="faq-item"><button class="faq-q" data-i18n="faq1_q"></button><div class="faq-a"><p data-i18n="faq1_a"></p></div></div>
+  <div class="faq-item"><button class="faq-q" data-i18n="faq2_q"></button><div class="faq-a"><p data-i18n="faq2_a"></p></div></div>
+  <div class="faq-item"><button class="faq-q" data-i18n="faq3_q"></button><div class="faq-a"><p data-i18n="faq3_a"></p></div></div>
+  <div class="faq-item"><button class="faq-q" data-i18n="faq4_q"></button><div class="faq-a"><p data-i18n="faq4_a"></p></div></div>
+</section>
+
+<!-- ======================= ADMISSIONS ======================= -->
+<section id="admissions" class="reveal">
+  <h2 data-i18n="admissions_title">التسجيل والقبول</h2>
+  <p class="sub" data-i18n="admissions_sub"></p>
+  <div class="grid steps">
+    <article class="card tilt"><div class="icon">1️⃣</div><h3 data-i18n="step1_t"></h3><p data-i18n="step1_p"></p></article>
+    <article class="card tilt"><div class="icon">2️⃣</div><h3 data-i18n="step2_t"></h3><p data-i18n="step2_p"></p></article>
+    <article class="card tilt"><div class="icon">3️⃣</div><h3 data-i18n="step3_t"></h3><p data-i18n="step3_p"></p></article>
+  </div>
+
+  <div class="form-card">
+    <h3 data-i18n="form_title"></h3>
+    <div class="stepper" id="stepper">
+      <span class="step-dot active" data-step-dot="1" data-i18n="f_step1"></span>
+      <span class="step-line"></span>
+      <span class="step-dot" data-step-dot="2" data-i18n="f_step2"></span>
+      <span class="step-line"></span>
+      <span class="step-dot" data-step-dot="3" data-i18n="f_step3"></span>
+    </div>
+
+    <form id="admissionsForm" novalidate>
+      <div class="form-step" data-step="1">
+        <label><span data-i18n="f_student_name"></span> *
+          <input type="text" id="afStudentName" autocomplete="name">
+        </label>
+        <label><span data-i18n="f_dob"></span>
+          <input type="date" id="afDob">
+        </label>
+        <label><span data-i18n="f_level"></span> *
+          <select id="afLevel">
+            <option value="primary" data-i18n="f_level_primary">ابتدائي</option>
+            <option value="secondary" data-i18n="f_level_secondary">ثانوي</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="form-step hidden" data-step="2">
+        <label><span data-i18n="f_guardian_name"></span> *
+          <input type="text" id="afGuardianName">
+        </label>
+        <label><span data-i18n="f_phone"></span>
+          <input type="tel" id="afPhone">
+        </label>
+        <label><span data-i18n="f_email"></span>
+          <input type="email" id="afEmail">
+        </label>
+        <label><span data-i18n="f_notes"></span>
+          <textarea id="afNotes" rows="3"></textarea>
+        </label>
+      </div>
+
+      <div class="form-step hidden" data-step="3">
+        <p class="sub" data-i18n="f_review_note"></p>
+        <dl class="review" id="afReview"></dl>
+      </div>
+
+      <p class="form-msg error hidden" id="afError"></p>
+      <div class="form-nav">
+        <button type="button" class="btn ghost hidden" id="afBack" data-i18n="f_back">رجوع</button>
+        <button type="button" class="btn" id="afNext" data-i18n="f_next">التالي</button>
+        <button type="submit" class="btn gold hidden" id="afSubmit" data-i18n="f_submit">إرسال الطلب</button>
+      </div>
+    </form>
+
+    <div class="success-box hidden" id="afSuccess">
+      <div class="icon">🎉</div>
+      <h3 data-i18n="f_success_title"></h3>
+      <p data-i18n="f_success_text"></p>
+      <p class="ref-code" id="afRefCode"></p>
+      <button type="button" class="btn" id="afAgain" data-i18n="f_again"></button>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= CONTACT ======================= -->
+<section id="contact" class="reveal">
+  <div class="contact-box">
+    <div>
+      <h2 class="on-dark" data-i18n="contact_title">تواصل معنا</h2>
+      <p class="on-dark-sub" data-i18n="contact_sub"></p>
+      <ul class="contact-list">
+        <li>📍 <strong data-i18n="contact_address_l"></strong>: <span data-i18n="contact_address"></span></li>
+        <li>📧 <strong data-i18n="contact_email_l"></strong>: <span data-i18n="contact_email"></span></li>
+        <li>📞 <strong data-i18n="contact_phone_l"></strong>: <span data-i18n="contact_phone"></span></li>
+      </ul>
+    </div>
+    <form id="contactForm" novalidate>
+      <label><span data-i18n="c_name"></span> *<input type="text" id="cfName" autocomplete="name"></label>
+      <label><span data-i18n="c_email"></span> *<input type="email" id="cfEmail" autocomplete="email"></label>
+      <label><span data-i18n="c_phone"></span><input type="tel" id="cfPhone" autocomplete="tel"></label>
+      <label><span data-i18n="c_message"></span> *<textarea id="cfMessage" rows="4"></textarea></label>
+      <p class="form-msg success hidden" id="cfSuccess" data-i18n="c_success"></p>
+      <p class="form-msg error hidden" id="cfError"></p>
+      <button class="btn gold wide" type="submit" data-i18n="c_send">أرسل الرسالة</button>
+    </form>
+  </div>
+</section>
+
+<p class="note" data-i18n="draft_note"></p>
+
+<!-- ======================= FOOTER ======================= -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="brand light"><span class="logo">✦</span><span data-i18n="brand"></span></div>
+      <p data-i18n="footer_tag"></p>
+    </div>
+    <div>
+      <h4 data-i18n="footer_links"></h4>
+      <a href="#about" data-i18n="nav_about"></a>
+      <a href="#academics" data-i18n="nav_academics"></a>
+      <a href="#admissions" data-i18n="nav_admissions"></a>
+      <a href="#news" data-i18n="nav_news"></a>
+    </div>
+    <div>
+      <h4 data-i18n="footer_contact"></h4>
+      <p>📍 <span data-i18n="contact_address"></span></p>
+      <p>📧 <span data-i18n="contact_email"></span></p>
+      <p>📞 <span data-i18n="contact_phone"></span></p>
+    </div>
+  </div>
+  <p class="rights" data-i18n="footer_rights"></p>
+</footer>
+
+<button id="backTop" class="back-top" aria-label="Back to top">↑</button>
+
+<!-- Lightbox -->
+<div class="lightbox hidden" id="lightbox" role="dialog" aria-modal="true">
+  <button class="lb-close" id="lbClose" aria-label="Close">✕</button>
+  <div class="lb-tile" id="lbTile"></div>
+  <p class="lb-caption" id="lbCaption"></p>
+</div>
+
+<script src="js/i18n.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

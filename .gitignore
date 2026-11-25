@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+
+# Runtime data (form submissions collected by the server — never commit these)
+server/data/runtime/*.json
+!server/data/runtime/.gitkeep
+
+# Environment
+.env
+.env.*
+
+# OS / editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
