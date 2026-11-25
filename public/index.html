@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>مدرسة المدينة المنورة | Al-Madinah Al-Munawwarah School</title>
 <meta name="description" content="Al-Madinah Al-Munawwarah School — bilingual Arabic & English school for primary and secondary students. مدرسة المدينة المنورة — مدرسة ثنائية اللغة للمرحلتين الابتدائية والثانوية.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%230b6b3a'/><text x='50' y='68' font-size='54' text-anchor='middle' fill='%23e8c85a'>✦</text></svg>">
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -77,11 +78,11 @@
   <p class="sub" data-i18n="academics_sub"></p>
 
   <div class="tabs" role="tablist">
-    <button class="tab active" id="tabPrimaryBtn" data-tab="primary" role="tab" data-i18n="tab_primary">🎒 الابتدائية</button>
-    <button class="tab" id="tabSecondaryBtn" data-tab="secondary" role="tab" data-i18n="tab_secondary">🎓 الثانوية</button>
+    <button class="tab active" id="tabPrimaryBtn" data-tab="primary" role="tab" aria-selected="true" aria-controls="panel-primary" type="button" data-i18n="tab_primary">🎒 الابتدائية</button>
+    <button class="tab" id="tabSecondaryBtn" data-tab="secondary" role="tab" aria-selected="false" aria-controls="panel-secondary" type="button" data-i18n="tab_secondary">🎓 الثانوية</button>
   </div>
 
-  <div class="tab-panel level primary" id="panel-primary">
+  <div class="tab-panel level primary" id="panel-primary" role="tabpanel" aria-labelledby="tabPrimaryBtn">
     <h3 data-i18n="primary_t"></h3>
     <p data-i18n="primary_p"></p>
     <h4 data-i18n="subjects_label"></h4>
@@ -92,7 +93,7 @@
     <p class="focus"><strong data-i18n="focus_label"></strong>: <span data-i18n="p_focus"></span></p>
   </div>
 
-  <div class="tab-panel level secondary hidden" id="panel-secondary">
+  <div class="tab-panel level secondary hidden" id="panel-secondary" role="tabpanel" aria-labelledby="tabSecondaryBtn">
     <h3 data-i18n="secondary_t"></h3>
     <p data-i18n="secondary_p"></p>
     <h4 data-i18n="subjects_label"></h4>
@@ -155,10 +156,10 @@
 <!-- ======================= FAQ ======================= -->
 <section id="faq" class="reveal">
   <h2 data-i18n="faq_title">الأسئلة الشائعة</h2>
-  <div class="faq-item"><button class="faq-q" data-i18n="faq1_q"></button><div class="faq-a"><p data-i18n="faq1_a"></p></div></div>
-  <div class="faq-item"><button class="faq-q" data-i18n="faq2_q"></button><div class="faq-a"><p data-i18n="faq2_a"></p></div></div>
-  <div class="faq-item"><button class="faq-q" data-i18n="faq3_q"></button><div class="faq-a"><p data-i18n="faq3_a"></p></div></div>
-  <div class="faq-item"><button class="faq-q" data-i18n="faq4_q"></button><div class="faq-a"><p data-i18n="faq4_a"></p></div></div>
+  <div class="faq-item"><button type="button" class="faq-q" aria-expanded="false" data-i18n="faq1_q"></button><div class="faq-a"><p data-i18n="faq1_a"></p></div></div>
+  <div class="faq-item"><button type="button" class="faq-q" aria-expanded="false" data-i18n="faq2_q"></button><div class="faq-a"><p data-i18n="faq2_a"></p></div></div>
+  <div class="faq-item"><button type="button" class="faq-q" aria-expanded="false" data-i18n="faq3_q"></button><div class="faq-a"><p data-i18n="faq3_a"></p></div></div>
+  <div class="faq-item"><button type="button" class="faq-q" aria-expanded="false" data-i18n="faq4_q"></button><div class="faq-a"><p data-i18n="faq4_a"></p></div></div>
 </section>
 
 <!-- ======================= ADMISSIONS ======================= -->
@@ -243,8 +244,8 @@
       <p class="on-dark-sub" data-i18n="contact_sub"></p>
       <ul class="contact-list">
         <li>📍 <strong data-i18n="contact_address_l"></strong>: <span data-i18n="contact_address"></span></li>
-        <li>📧 <strong data-i18n="contact_email_l"></strong>: <span data-i18n="contact_email"></span></li>
-        <li>📞 <strong data-i18n="contact_phone_l"></strong>: <span data-i18n="contact_phone"></span></li>
+        <li>📧 <strong data-i18n="contact_email_l"></strong>: <span class="ltr-inline" dir="ltr" data-i18n="contact_email"></span></li>
+        <li>📞 <strong data-i18n="contact_phone_l"></strong>: <span class="ltr-inline" dir="ltr" data-i18n="contact_phone"></span></li>
       </ul>
     </div>
     <form id="contactForm" novalidate>
@@ -279,8 +280,8 @@
     <div>
       <h4 data-i18n="footer_contact"></h4>
       <p>📍 <span data-i18n="contact_address"></span></p>
-      <p>📧 <span data-i18n="contact_email"></span></p>
-      <p>📞 <span data-i18n="contact_phone"></span></p>
+      <p>📧 <span class="ltr-inline" dir="ltr" data-i18n="contact_email"></span></p>
+      <p>📞 <span class="ltr-inline" dir="ltr" data-i18n="contact_phone"></span></p>
     </div>
   </div>
   <p class="rights" data-i18n="footer_rights"></p>

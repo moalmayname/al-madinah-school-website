@@ -43,6 +43,8 @@
     document.documentElement.dir = s._dir;
     document.title = s.title;
     document.getElementById('langBtn').textContent = s._label;
+    var backTopBtn = document.getElementById('backTop');
+    if (backTopBtn && s.back_top) backTopBtn.setAttribute('aria-label', s.back_top);
     document.querySelectorAll('[data-i18n]').forEach(function (el) {
       var v = s[el.getAttribute('data-i18n')];
       if (typeof v === 'string') el.textContent = v;
@@ -176,8 +178,12 @@
   /* ---------------- Academics tabs ---------------- */
   document.querySelectorAll('.tab').forEach(function (tab) {
     tab.addEventListener('click', function () {
-      document.querySelectorAll('.tab').forEach(function (x) { x.classList.remove('active'); });
+      document.querySelectorAll('.tab').forEach(function (x) {
+        x.classList.remove('active');
+        x.setAttribute('aria-selected', 'false');
+      });
       tab.classList.add('active');
+      tab.setAttribute('aria-selected', 'true');
       var which = tab.getAttribute('data-tab');
       document.getElementById('panel-primary').classList.toggle('hidden', which !== 'primary');
       document.getElementById('panel-secondary').classList.toggle('hidden', which !== 'secondary');
@@ -190,6 +196,7 @@
     var a = item.querySelector('.faq-a');
     q.addEventListener('click', function () {
       var open = item.classList.toggle('open');
+      q.setAttribute('aria-expanded', open ? 'true' : 'false');
       a.style.maxHeight = open ? a.scrollHeight + 'px' : '0px';
     });
   });
@@ -202,7 +209,10 @@
     burger.setAttribute('aria-expanded', open ? 'true' : 'false');
   });
   navLinks.querySelectorAll('a').forEach(function (a) {
-    a.addEventListener('click', function () { navLinks.classList.remove('open'); });
+    a.addEventListener('click', function () {
+      navLinks.classList.remove('open');
+      burger.setAttribute('aria-expanded', 'false');
+    });
   });
 
   var backTop = document.getElementById('backTop');
@@ -218,6 +228,7 @@
     document.querySelectorAll('.blob').forEach(function (b, i) {
       b.style.transform = 'translateY(' + window.scrollY * (0.03 + i * 0.02) + 'px)';
     });
+    revealInOrAboveViewport();
   }, { passive: true });
 
   /* ---------------- Reveal + counters ---------------- */
@@ -225,8 +236,19 @@
     entries.forEach(function (e) {
       if (e.isIntersecting) { e.target.classList.add('visible'); revealIO.unobserve(e.target); }
     });
-  }, { threshold: 0.12 });
+  }, { threshold: 0.02 });
+  function revealInOrAboveViewport() {
+    var vh = window.innerHeight || document.documentElement.clientHeight;
+    document.querySelectorAll('.reveal:not(.visible)').forEach(function (el) {
+      if (el.getBoundingClientRect().top <= vh * 0.96) {
+        el.classList.add('visible');
+        revealIO.unobserve(el);
+      }
+    });
+  }
   document.querySelectorAll('.reveal').forEach(function (el) { revealIO.observe(el); });
+  window.addEventListener('hashchange', function () { setTimeout(revealInOrAboveViewport, 60); });
+  revealInOrAboveViewport();
 
   var counterIO = new IntersectionObserver(function (entries) {
     entries.forEach(function (e) {
