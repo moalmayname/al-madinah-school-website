@@ -37,7 +37,8 @@ forms, and a rich animated frontend (3D hero cube, tilt cards, parallax, counter
 - Express server serving the static frontend plus a small JSON API
 - Seed content in editable JSON files (`server/data/*.json`)
 - Contact messages and admission applications validated and stored as JSON
-- Token-protected admin endpoint to review submissions
+- Token-protected admin endpoints + a dashboard page (`public/admin.html`) to review
+  submissions and publish news/events
 
 ## Tech stack
 
@@ -62,14 +63,16 @@ No build step is required.
 | Method | Endpoint | Description |
 | ------ | -------- | ----------- |
 | GET | `/api/health` | Health check → `{ status: "ok", ... }` |
-| GET | `/api/news` | News items (bilingual `title_en/title_ar`, `body_en/body_ar`, `date`, `tag_*`) |
-| GET | `/api/events` | Upcoming events (bilingual fields + `date_label_*`) |
+| GET | `/api/news` | News items (bilingual `title_en/title_ar`, `body_en/body_ar`, `date`, `tag_*`) — dashboard-added items first, then seed items |
+| GET | `/api/events` | Upcoming events (bilingual fields + `date_label_*`) — dashboard-added items first, then seed items |
 | GET | `/api/teachers` | Teacher profiles (bilingual `name_*`, `role_*`, `bio_*`, `icon`) |
 | GET | `/api/gallery` | Gallery tiles (`icon`, `color`, bilingual `caption_*`) |
 | GET | `/api/stats` | Stat counters (`value`, `suffix`, bilingual `label_*`) |
 | POST | `/api/contact` | Body: `{ name, email, phone?, message }` — validated, stored, returns `{ ok: true }` |
 | POST | `/api/admissions` | Body: `{ studentName, level: "primary"\|"secondary", guardianName, guardianPhone?, guardianEmail?, notes? }` — at least one guardian contact is required. Returns `{ ok: true, reference: "ADM-2026-XXXXXX" }` |
 | GET | `/api/admin/submissions` | Returns all stored contact messages + applications. **Requires header `x-admin-token: <ADMIN_TOKEN>`** |
+| POST | `/api/admin/news` | Body: `{ title_en, title_ar, body_en, body_ar, date?, tag_en?, tag_ar? }` — adds a news item (stored in runtime data) that appears first in `/api/news`. **Admin token required** |
+| POST | `/api/admin/events` | Body: `{ title_en, title_ar, body_en, body_ar, date_label_en?, date_label_ar? }` — adds an event (stored in runtime data) that appears first in `/api/events`. **Admin token required** |
 
 ### Admin token
 
@@ -85,6 +88,38 @@ project runs out of the box for local testing. **Always set a real `ADMIN_TOKEN`
 production** — this is a demo-grade check, not a full auth system, and no passwords
 are stored anywhere.
 
+## Admin dashboard
+
+A ready-made admin page ships with the site at **`public/admin.html`**. After
+`npm start`, open:
+
+```
+http://localhost:3000/admin.html      (replace 3000 with your PORT)
+```
+
+There is also a small **Admin** link in the website footer. With it you can:
+
+- **Log in with the admin token** — the same `ADMIN_TOKEN` described above, sent to
+  the API in the `x-admin-token` header. The token is kept only in the browser's
+  `sessionStorage` (cleared on Log out); there are no user accounts or passwords.
+- **Overview** — counts of admission applications, contact messages, news and events.
+- **Admissions / Messages tabs** — read everything submitted through the website
+  forms (via `GET /api/admin/submissions`).
+- **Add News / Add Event tabs** — publish bilingual news items and events
+  (`POST /api/admin/news`, `POST /api/admin/events`). New items are stored in
+  `server/data/runtime/added-news.json` / `added-events.json` (gitignored, like
+  other runtime data) and appear at the top of the public `/api/news` and
+  `/api/events` feeds, so they show on the website immediately.
+- **Content tab** — see exactly what is live on the website.
+
+> **Change the token before real use:** if you deploy this site, always start the
+> server with your own long random `ADMIN_TOKEN` (see above) — anyone who knows
+> the token can read submissions and publish news/events.
+>
+> If `admin.html` is opened as a plain local file (no server), it switches to a
+> clearly-labelled **demo mode** with sample data so the layout can be previewed;
+> nothing is saved in demo mode.
+
 ## Project structure
 
 ```
@@ -94,6 +129,7 @@ al-madinah-school-website/
 ├── .gitignore
 ├── public/                  # Static frontend (served by Express)
 │   ├── index.html
+│   ├── admin.html           # Admin dashboard (token login; submissions + add news/events)
 │   ├── css/styles.css
 │   └── js/
 │       ├── i18n.js          # All EN/AR strings + fallback data + testimonials

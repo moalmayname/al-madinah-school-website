@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard — Al-Madinah Al-Munawwarah School</title>
+<style>
+  :root{
+    --green:#0b6b3a; --green2:#146c43; --green-dark:#084f2b;
+    --gold:#c9a227; --gold-soft:#f3e9c8;
+    --bg:#f4f7f3; --card:#ffffff; --ink:#1d2b21; --muted:#5d6f61;
+    --line:#dde6dc; --red:#b3261e; --red-bg:#fdecea;
+    --ok:#0b6b3a; --ok-bg:#e6f4ec; --warn-bg:#fdf6dd; --warn-ink:#6d5b00;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Segoe UI",system-ui,-apple-system,Arial,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
+  a{color:var(--green)}
+  .hidden{display:none !important}
+
+  /* ---------- Header ---------- */
+  header.topbar{
+    background:linear-gradient(135deg,var(--green-dark),var(--green) 55%,var(--green2));
+    color:#fff;padding:18px 22px;border-bottom:4px solid var(--gold);
+    display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;justify-content:space-between;
+  }
+  header.topbar .brand{display:flex;align-items:center;gap:12px}
+  header.topbar .logo{
+    width:44px;height:44px;border-radius:50%;display:grid;place-items:center;
+    background:var(--gold);color:#20301f;font-size:22px;flex:0 0 auto;
+  }
+  header.topbar h1{font-size:19px;line-height:1.25}
+  header.topbar h1 .ar{display:block;font-size:16px;color:var(--gold-soft);font-weight:600}
+  header.topbar .head-actions{display:flex;align-items:center;gap:10px}
+  .badge-demo{background:var(--gold);color:#20301f;font-weight:700;font-size:12px;padding:4px 10px;border-radius:999px}
+
+  /* ---------- Layout ---------- */
+  main{max-width:1120px;margin:0 auto;padding:22px 16px 60px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:0 2px 10px rgba(11,107,58,.05)}
+
+  /* ---------- Demo banner ---------- */
+  .demo-banner{
+    background:var(--warn-bg);color:var(--warn-ink);border:1px solid var(--gold);
+    border-radius:var(--radius);padding:14px 18px;margin-bottom:18px;font-size:15px;line-height:1.55;
+  }
+  .demo-banner strong{color:#4d3f00}
+
+  /* ---------- Login ---------- */
+  .login-wrap{max-width:430px;margin:48px auto}
+  .login-wrap h2{font-size:22px;margin-bottom:6px;color:var(--green-dark)}
+  .login-wrap p{color:var(--muted);font-size:14.5px;line-height:1.55;margin-bottom:18px}
+  label{display:block;font-size:13.5px;font-weight:600;margin:14px 0 6px;color:var(--green-dark)}
+  input[type=text],input[type=password],input[type=date],textarea,select{
+    width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;
+    font:inherit;font-size:15px;background:#fff;color:var(--ink);
+  }
+  input:focus,textarea:focus{outline:2px solid var(--gold);border-color:var(--gold)}
+  textarea{resize:vertical;min-height:90px}
+  .btn{
+    display:inline-block;border:none;cursor:pointer;font:inherit;font-weight:700;
+    background:var(--green);color:#fff;padding:11px 22px;border-radius:10px;font-size:15px;
+  }
+  .btn:hover{background:var(--green2)}
+  .btn.gold{background:var(--gold);color:#20301f}
+  .btn.ghost{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.75);padding:8px 16px;font-size:14px}
+  .btn.ghost:hover{border-color:var(--gold);color:var(--gold-soft)}
+  .login-wrap .btn{width:100%;margin-top:20px}
+  .msg{border-radius:10px;padding:11px 14px;font-size:14.5px;margin-top:14px;line-height:1.5}
+  .msg.error{background:var(--red-bg);color:var(--red);border:1px solid #f2c1bd}
+  .msg.success{background:var(--ok-bg);color:var(--ok);border:1px solid #bfe3cf}
+  .msg.warn{background:var(--warn-bg);color:var(--warn-ink);border:1px solid var(--gold)}
+
+  /* ---------- Tabs ---------- */
+  .tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+  .tab-btn{
+    border:1.5px solid var(--green);background:#fff;color:var(--green-dark);cursor:pointer;
+    font:inherit;font-weight:700;font-size:14.5px;padding:9px 18px;border-radius:999px;
+  }
+  .tab-btn.active{background:var(--green);color:#fff}
+  .tab-btn:hover{border-color:var(--gold)}
+
+  /* ---------- Overview cards ---------- */
+  .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
+  .stat-card{background:var(--card);border:1px solid var(--line);border-top:5px solid var(--gold);border-radius:var(--radius);padding:20px;text-align:center}
+  .stat-card .num{font-size:38px;font-weight:800;color:var(--green)}
+  .stat-card .lbl{color:var(--muted);font-size:14.5px;margin-top:4px}
+  .panel h2{font-size:20px;color:var(--green-dark);margin-bottom:6px}
+  .panel .sub{color:var(--muted);font-size:14.5px;margin-bottom:16px;line-height:1.55}
+
+  /* ---------- Tables & lists ---------- */
+  .table-wrap{overflow-x:auto}
+  table{width:100%;border-collapse:collapse;font-size:14.5px}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{background:#eef5ee;color:var(--green-dark);font-size:13px;text-transform:uppercase;letter-spacing:.04em}
+  tr:hover td{background:#fafcfa}
+  .empty{color:var(--muted);text-align:center;padding:26px 10px;font-size:15px}
+  .ref{font-weight:700;color:var(--green-dark);white-space:nowrap}
+  .pill{display:inline-block;background:var(--gold-soft);color:#5c4a00;border-radius:999px;padding:2px 10px;font-size:12.5px;font-weight:700}
+  .content-item{border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:10px;background:#fff}
+  .content-item h3{font-size:16.5px;color:var(--green-dark)}
+  .content-item .ar-title{font-size:15px;color:var(--ink);margin-top:2px}
+  .content-item .meta{color:var(--muted);font-size:13px;margin-top:4px}
+  .content-item p{font-size:14.5px;line-height:1.55;margin-top:6px;color:#33463a}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
+  @media (max-width:640px){.two-col{grid-template-columns:1fr}}
+  form .btn{margin-top:18px}
+  footer.note{max-width:1120px;margin:0 auto;padding:0 16px 30px;color:var(--muted);font-size:13.5px;text-align:center}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="logo">✦</span>
+    <h1>Al-Madinah Al-Munawwarah School — Admin Dashboard
+      <span class="ar" dir="rtl">مدرسة المدينة المنورة — لوحة التحكم</span>
+    </h1>
+  </div>
+  <div class="head-actions">
+    <span id="demoBadge" class="badge-demo hidden">DEMO MODE</span>
+    <button id="logoutBtn" class="btn ghost hidden" type="button">Log out</button>
+  </div>
+</header>
+
+<main>
+  <!-- Demo banner (shown only when the API cannot be reached) -->
+  <div id="demoBanner" class="demo-banner hidden">
+    <strong>Demo mode</strong> — start the server (<code>npm start</code>) and open
+    <code>http://localhost:PORT/admin.html</code> to manage real data.
+    You are seeing <strong>sample data</strong> for preview only; nothing here is saved.
+  </div>
+
+  <!-- ================= LOGIN ================= -->
+  <section id="loginView" class="login-wrap">
+    <div class="card">
+      <h2>🔐 Admin login</h2>
+      <p>Enter the admin token to view admissions and messages and to add news and events.
+         The token is the <code>ADMIN_TOKEN</code> the server was started with.</p>
+      <form id="loginForm">
+        <label for="tokenInput">Admin token</label>
+        <input type="password" id="tokenInput" autocomplete="off" placeholder="Enter admin token" required>
+        <button class="btn" type="submit">Log in</button>
+        <div id="loginMsg"></div>
+      </form>
+    </div>
+  </section>
+
+  <!-- ================= DASHBOARD ================= -->
+  <section id="dashView" class="hidden">
+    <nav class="tabs" id="tabs">
+      <button class="tab-btn active" data-tab="overview" type="button">Overview</button>
+      <button class="tab-btn" data-tab="admissions" type="button">Admissions</button>
+      <button class="tab-btn" data-tab="messages" type="button">Messages</button>
+      <button class="tab-btn" data-tab="addnews" type="button">Add News</button>
+      <button class="tab-btn" data-tab="addevent" type="button">Add Event</button>
+      <button class="tab-btn" data-tab="content" type="button">Content</button>
+    </nav>
+
+    <!-- Overview -->
+    <div class="panel" id="panel-overview">
+      <div class="stat-grid">
+        <div class="stat-card"><div class="num" id="countAdmissions">–</div><div class="lbl">📋 Admission applications</div></div>
+        <div class="stat-card"><div class="num" id="countMessages">–</div><div class="lbl">✉️ Contact messages</div></div>
+        <div class="stat-card"><div class="num" id="countNews">–</div><div class="lbl">📰 News items (live)</div></div>
+        <div class="stat-card"><div class="num" id="countEvents">–</div><div class="lbl">📅 Events (live)</div></div>
+      </div>
+    </div>
+
+    <!-- Admissions -->
+    <div class="panel hidden" id="panel-admissions">
+      <div class="card">
+        <h2>Admission applications</h2>
+        <p class="sub">Applications submitted through the website admissions form.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Student</th><th>Level</th><th>Guardian</th><th>Phone</th><th>Email</th><th>Reference</th><th>Date</th></tr></thead>
+            <tbody id="admissionsBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Messages -->
+    <div class="panel hidden" id="panel-messages">
+      <div class="card">
+        <h2>Contact messages</h2>
+        <p class="sub">Messages submitted through the website contact form.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Message</th><th>Date</th></tr></thead>
+            <tbody id="messagesBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add News -->
+    <div class="panel hidden" id="panel-addnews">
+      <div class="card">
+        <h2>Add a news item</h2>
+        <p class="sub">The item appears at the top of the News section on the website, in both languages.</p>
+        <form id="newsForm">
+          <div class="two-col">
+            <div><label for="n_title_en">Title (English) *</label><input type="text" id="n_title_en" required maxlength="200"></div>
+            <div><label for="n_title_ar">Title (Arabic) *</label><input type="text" id="n_title_ar" dir="rtl" required maxlength="200"></div>
+            <div><label for="n_tag_en">Tag (English)</label><input type="text" id="n_tag_en" maxlength="60" placeholder="News"></div>
+            <div><label for="n_tag_ar">Tag (Arabic)</label><input type="text" id="n_tag_ar" dir="rtl" maxlength="60" placeholder="أخبار"></div>
+          </div>
+          <label for="n_date">Date</label>
+          <input type="date" id="n_date">
+          <label for="n_body_en">Text (English) *</label>
+          <textarea id="n_body_en" required maxlength="4000"></textarea>
+          <label for="n_body_ar">Text (Arabic) *</label>
+          <textarea id="n_body_ar" dir="rtl" required maxlength="4000"></textarea>
+          <button class="btn gold" type="submit">Publish news item</button>
+          <div id="newsMsg"></div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Add Event -->
+    <div class="panel hidden" id="panel-addevent">
+      <div class="card">
+        <h2>Add an event</h2>
+        <p class="sub">The event appears at the top of the Events list on the website, in both languages.</p>
+        <form id="eventForm">
+          <div class="two-col">
+            <div><label for="e_title_en">Title (English) *</label><input type="text" id="e_title_en" required maxlength="200"></div>
+            <div><label for="e_title_ar">Title (Arabic) *</label><input type="text" id="e_title_ar" dir="rtl" required maxlength="200"></div>
+            <div><label for="e_date_label_en">Date label (English)</label><input type="text" id="e_date_label_en" maxlength="120" placeholder="e.g. 12 December 2026"></div>
+            <div><label for="e_date_label_ar">Date label (Arabic)</label><input type="text" id="e_date_label_ar" dir="rtl" maxlength="120" placeholder="مثال: ١٢ ديسمبر ٢٠٢٦"></div>
+          </div>
+          <label for="e_body_en">Text (English) *</label>
+          <textarea id="e_body_en" required maxlength="4000"></textarea>
+          <label for="e_body_ar">Text (Arabic) *</label>
+          <textarea id="e_body_ar" dir="rtl" required maxlength="4000"></textarea>
+          <button class="btn gold" type="submit">Publish event</button>
+          <div id="eventMsg"></div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="panel hidden" id="panel-content">
+      <div class="card">
+        <h2>Live content</h2>
+        <p class="sub">Everything currently shown on the website — seed content plus anything added here.</p>
+        <h3 style="color:var(--green-dark);margin:14px 0 10px">📰 News</h3>
+        <div id="contentNews"></div>
+        <h3 style="color:var(--green-dark);margin:22px 0 10px">📅 Events</h3>
+        <div id="contentEvents"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="note">Al-Madinah Al-Munawwarah School — Alshohda, Sayhout • +967 770 525 885 • wesportsperfect@gmail.com</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  // ---------------- Sample data (demo mode only) ----------------
+  var SAMPLE_SUBMISSIONS = {
+    contactMessages: [
+      { id: 'demo1', name: 'Sample Parent (demo)', email: 'parent@example.com', phone: '+967 700 000 000', message: 'This is a sample message shown in demo mode. Real messages appear here when the server is running.', receivedAt: '2026-11-20T09:15:00.000Z' },
+      { id: 'demo2', name: 'Demo Visitor', email: 'visitor@example.com', phone: '', message: 'Sample message — demo data only, not a real enquiry.', receivedAt: '2026-11-22T13:40:00.000Z' }
+    ],
+    applications: [
+      { id: 'demo1', reference: 'ADM-2026-DEMO01', studentName: 'Sample Student (demo)', level: 'primary', guardianName: 'Sample Guardian', guardianPhone: '+967 700 000 000', guardianEmail: 'guardian@example.com', receivedAt: '2026-11-21T08:05:00.000Z' },
+      { id: 'demo2', reference: 'ADM-2026-DEMO02', studentName: 'Demo Student Two', level: 'secondary', guardianName: 'Demo Guardian', guardianPhone: '', guardianEmail: 'demo2@example.com', receivedAt: '2026-11-23T11:30:00.000Z' }
+    ]
+  };
+  var SAMPLE_NEWS = [
+    { id: 'demo-n1', title_en: 'Sample news item (demo)', title_ar: 'خبر تجريبي (عرض)', body_en: 'Demo data — real news items appear here when the server is running.', body_ar: 'بيانات تجريبية — تظهر الأخبار الحقيقية هنا عند تشغيل الخادم.', date: '2026-11-20', tag_en: 'News', tag_ar: 'أخبار' }
+  ];
+  var SAMPLE_EVENTS = [
+    { id: 'demo-e1', title_en: 'Sample event (demo)', title_ar: 'فعالية تجريبية (عرض)', body_en: 'Demo data — real events appear here when the server is running.', body_ar: 'بيانات تجريبية — تظهر الفعاليات الحقيقية هنا عند تشغيل الخادم.', date_label_en: 'Demo date', date_label_ar: 'تاريخ تجريبي' }
+  ];
+
+  // ---------------- State ----------------
+  var token = '';
+  var demoMode = false;
+  var submissions = { contactMessages: [], applications: [] };
+  var newsItems = [];
+  var eventItems = [];
+
+  // ---------------- Helpers ----------------
+  function $(id) { return document.getElementById(id); }
+  function esc(v) {
+    return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function fmtDate(iso) {
+    if (!iso) return '—';
+    var d = new Date(iso);
+    return isNaN(d.getTime()) ? esc(iso) : d.toLocaleString();
+  }
+  function showMsg(el, kind, text) {
+    el.innerHTML = '<div class="msg ' + kind + '">' + esc(text) + '</div>';
+  }
+  function api(path, options) {
+    options = options || {};
+    options.headers = options.headers || {};
+    if (token) options.headers['x-admin-token'] = token;
+    if (options.body) options.headers['Content-Type'] = 'application/json';
+    return fetch(path, options);
+  }
+
+  // ---------------- Login / logout ----------------
+  function tryLogin(candidate, silent) {
+    return fetch('/api/admin/submissions', { headers: { 'x-admin-token': candidate } })
+      .then(function (res) {
+        if (res.status === 401) {
+          if (!silent) showMsg($('loginMsg'), 'error', '✗ Invalid admin token — please check it and try again.');
+          return false;
+        }
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return res.json().then(function (data) {
+          token = candidate;
+          sessionStorage.setItem('adminToken', token);
+          submissions = { contactMessages: data.contactMessages || [], applications: data.applications || [] };
+          enterDashboard(false);
+          return true;
+        });
+      })
+      .catch(function () {
+        // API unreachable (e.g. page opened as a local file) -> demo mode
+        enterDashboard(true);
+        return true;
+      });
+  }
+
+  function enterDashboard(demo) {
+    demoMode = demo;
+    $('loginView').classList.add('hidden');
+    $('dashView').classList.remove('hidden');
+    $('logoutBtn').classList.remove('hidden');
+    $('demoBanner').classList.toggle('hidden', !demo);
+    $('demoBadge').classList.toggle('hidden', !demo);
+    if (demo) {
+      submissions = SAMPLE_SUBMISSIONS;
+      newsItems = SAMPLE_NEWS;
+      eventItems = SAMPLE_EVENTS;
+      renderAll();
+    } else {
+      loadContent();
+    }
+  }
+
+  function logout() {
+    token = '';
+    demoMode = false;
+    sessionStorage.removeItem('adminToken');
+    $('dashView').classList.add('hidden');
+    $('logoutBtn').classList.add('hidden');
+    $('demoBanner').classList.add('hidden');
+    $('demoBadge').classList.add('hidden');
+    $('loginView').classList.remove('hidden');
+    $('loginMsg').innerHTML = '';
+    $('tokenInput').value = '';
+  }
+
+  // ---------------- Data loading ----------------
+  function loadContent() {
+    Promise.all([
+      fetch('/api/news').then(function (r) { return r.ok ? r.json() : []; }).catch(function () { return []; }),
+      fetch('/api/events').then(function (r) { return r.ok ? r.json() : []; }).catch(function () { return []; })
+    ]).then(function (results) {
+      newsItems = results[0] || [];
+      eventItems = results[1] || [];
+      renderAll();
+    });
+  }
+
+  // ---------------- Rendering ----------------
+  function renderAll() {
+    $('countAdmissions').textContent = submissions.applications.length;
+    $('countMessages').textContent = submissions.contactMessages.length;
+    $('countNews').textContent = newsItems.length;
+    $('countEvents').textContent = eventItems.length;
+
+    var ab = $('admissionsBody');
+    if (!submissions.applications.length) {
+      ab.innerHTML = '<tr><td colspan="7" class="empty">No applications yet.</td></tr>';
+    } else {
+      ab.innerHTML = submissions.applications.map(function (a) {
+        return '<tr><td>' + esc(a.studentName) + '</td><td><span class="pill">' + esc(a.level) + '</span></td>' +
+          '<td>' + esc(a.guardianName) + '</td><td>' + esc(a.guardianPhone || '—') + '</td>' +
+          '<td>' + esc(a.guardianEmail || '—') + '</td><td class="ref">' + esc(a.reference) + '</td>' +
+          '<td>' + fmtDate(a.receivedAt) + '</td></tr>';
+      }).join('');
+    }
+
+    var mb = $('messagesBody');
+    if (!submissions.contactMessages.length) {
+      mb.innerHTML = '<tr><td colspan="5" class="empty">No messages yet.</td></tr>';
+    } else {
+      mb.innerHTML = submissions.contactMessages.map(function (m) {
+        return '<tr><td>' + esc(m.name) + '</td><td>' + esc(m.email) + '</td><td>' + esc(m.phone || '—') + '</td>' +
+          '<td>' + esc(m.message) + '</td><td>' + fmtDate(m.receivedAt) + '</td></tr>';
+      }).join('');
+    }
+
+    $('contentNews').innerHTML = newsItems.length ? newsItems.map(function (n) {
+      return '<div class="content-item"><h3>' + esc(n.title_en) + '</h3>' +
+        '<div class="ar-title" dir="rtl" style="text-align:right">' + esc(n.title_ar) + '</div>' +
+        '<div class="meta">📅 ' + esc(n.date || '') + (n.tag_en ? ' • 🏷️ ' + esc(n.tag_en) : '') + '</div>' +
+        '<p>' + esc(n.body_en) + '</p></div>';
+    }).join('') : '<p class="empty">No news items.</p>';
+
+    $('contentEvents').innerHTML = eventItems.length ? eventItems.map(function (ev) {
+      return '<div class="content-item"><h3>' + esc(ev.title_en) + '</h3>' +
+        '<div class="ar-title" dir="rtl" style="text-align:right">' + esc(ev.title_ar) + '</div>' +
+        '<div class="meta">📅 ' + esc(ev.date_label_en || '') + '</div>' +
+        '<p>' + esc(ev.body_en) + '</p></div>';
+    }).join('') : '<p class="empty">No events.</p>';
+  }
+
+  // ---------------- Tabs ----------------
+  $('tabs').addEventListener('click', function (e) {
+    var btn = e.target.closest('[data-tab]');
+    if (!btn) return;
+    document.querySelectorAll('.tab-btn').forEach(function (b) { b.classList.toggle('active', b === btn); });
+    document.querySelectorAll('.panel').forEach(function (p) { p.classList.add('hidden'); });
+    $('panel-' + btn.getAttribute('data-tab')).classList.remove('hidden');
+  });
+
+  // ---------------- Forms ----------------
+  $('loginForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    $('loginMsg').innerHTML = '';
+    tryLogin($('tokenInput').value.trim(), false);
+  });
+  $('logoutBtn').addEventListener('click', logout);
+
+  $('newsForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var box = $('newsMsg');
+    if (demoMode) {
+      showMsg(box, 'warn', 'Demo mode — this was NOT saved. Start the server (npm start) and open the dashboard through it to publish for real.');
+      return;
+    }
+    var payload = {
+      title_en: $('n_title_en').value, title_ar: $('n_title_ar').value,
+      body_en: $('n_body_en').value, body_ar: $('n_body_ar').value,
+      date: $('n_date').value, tag_en: $('n_tag_en').value, tag_ar: $('n_tag_ar').value
+    };
+    api('/api/admin/news', { method: 'POST', body: JSON.stringify(payload) })
+      .then(function (res) {
+        return res.json().then(function (data) { return { status: res.status, data: data }; });
+      })
+      .then(function (r) {
+        if (r.status === 201) {
+          showMsg(box, 'success', '✓ News item published — it is now at the top of the News section on the website.');
+          e.target.reset();
+          loadContent();
+        } else if (r.status === 401) {
+          showMsg(box, 'error', '✗ Session expired or token invalid — please log out and log in again.');
+        } else {
+          var errs = r.data && r.data.errors ? Object.values(r.data.errors).join(' ') : 'Please check the form and try again.';
+          showMsg(box, 'error', '✗ Could not publish: ' + errs);
+        }
+      })
+      .catch(function () { showMsg(box, 'error', '✗ Could not reach the server. Is it still running?'); });
+  });
+
+  $('eventForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var box = $('eventMsg');
+    if (demoMode) {
+      showMsg(box, 'warn', 'Demo mode — this was NOT saved. Start the server (npm start) and open the dashboard through it to publish for real.');
+      return;
+    }
+    var payload = {
+      title_en: $('e_title_en').value, title_ar: $('e_title_ar').value,
+      body_en: $('e_body_en').value, body_ar: $('e_body_ar').value,
+      date_label_en: $('e_date_label_en').value, date_label_ar: $('e_date_label_ar').value
+    };
+    api('/api/admin/events', { method: 'POST', body: JSON.stringify(payload) })
+      .then(function (res) {
+        return res.json().then(function (data) { return { status: res.status, data: data }; });
+      })
+      .then(function (r) {
+        if (r.status === 201) {
+          showMsg(box, 'success', '✓ Event published — it is now at the top of the Events list on the website.');
+          e.target.reset();
+          loadContent();
+        } else if (r.status === 401) {
+          showMsg(box, 'error', '✗ Session expired or token invalid — please log out and log in again.');
+        } else {
+          var errs = r.data && r.data.errors ? Object.values(r.data.errors).join(' ') : 'Please check the form and try again.';
+          showMsg(box, 'error', '✗ Could not publish: ' + errs);
+        }
+      })
+      .catch(function () { showMsg(box, 'error', '✗ Could not reach the server. Is it still running?'); });
+  });
+
+  // ---------------- Init ----------------
+  var saved = sessionStorage.getItem('adminToken');
+  if (saved) tryLogin(saved, true);
+})();
+</script>
+</body>
+</html>

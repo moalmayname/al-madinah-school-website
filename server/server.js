@@ -5,11 +5,12 @@
  *  - serves the frontend from ../public
  *  - serves bilingual seed content (news, events, teachers, gallery, stats)
  *  - accepts contact messages and admission applications (stored as JSON)
- *  - exposes a token-protected admin endpoint to review submissions
+ *  - exposes token-protected admin endpoints to review submissions and to
+ *    add news / events (used by the admin dashboard in public/admin.html)
  *
  * Run:  npm install && npm start        (http://localhost:3000)
  * Env:  PORT         — port to listen on (default 3000)
- *       ADMIN_TOKEN  — token required by GET /api/admin/submissions
+ *       ADMIN_TOKEN  — token required by the /api/admin/* endpoints
  *                      (demo default below — CHANGE IT in production!)
  */
 const path = require('path');
@@ -48,13 +49,27 @@ function makeReference() {
   return `ADM-${new Date().getFullYear()}-${rand}`;
 }
 
+function makeId(prefix) {
+  return `${prefix}-${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
+}
+
+// Admin guard: the caller must send the ADMIN_TOKEN in the x-admin-token header.
+function requireAdmin(req, res, next) {
+  const token = req.get('x-admin-token');
+  if (!token || token !== ADMIN_TOKEN) {
+    return res.status(401).json({ ok: false, error: 'Unauthorized — missing or invalid x-admin-token header.' });
+  }
+  return next();
+}
+
 // ---------- Public content API (seed data) ----------
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', service: 'al-madinah-school-website', time: new Date().toISOString() });
 });
 
-app.get('/api/news', (req, res) => res.json(store.readSeed('news')));
-app.get('/api/events', (req, res) => res.json(store.readSeed('events')));
+// News / events = items added from the admin dashboard (newest first) + seed content
+app.get('/api/news', (req, res) => res.json([...store.readRuntime('added-news').slice().reverse(), ...store.readSeed('news')]));
+app.get('/api/events', (req, res) => res.json([...store.readRuntime('added-events').slice().reverse(), ...store.readSeed('events')]));
 app.get('/api/teachers', (req, res) => res.json(store.readSeed('teachers')));
 app.get('/api/gallery', (req, res) => res.json(store.readSeed('gallery')));
 app.get('/api/stats', (req, res) => res.json(store.readSeed('stats')));
@@ -115,17 +130,66 @@ app.post('/api/admissions', (req, res) => {
   return res.status(201).json({ ok: true, reference, message: 'Application received. Please keep your reference code.' });
 });
 
-// ---------- Admin: review submissions (token protected) ----------
-app.get('/api/admin/submissions', (req, res) => {
-  const token = req.get('x-admin-token');
-  if (!token || token !== ADMIN_TOKEN) {
-    return res.status(401).json({ ok: false, error: 'Unauthorized — missing or invalid x-admin-token header.' });
-  }
+// ---------- Admin (token protected, used by public/admin.html) ----------
+
+// Review form submissions
+app.get('/api/admin/submissions', requireAdmin, (req, res) => {
   return res.json({
     ok: true,
     contactMessages: store.readRuntime('contact-messages'),
     applications: store.readRuntime('applications'),
   });
+});
+
+// Add a news item — appears at the top of GET /api/news and on the website
+app.post('/api/admin/news', requireAdmin, (req, res) => {
+  const item = {
+    title_en: clean(req.body.title_en, 200),
+    title_ar: clean(req.body.title_ar, 200),
+    body_en: clean(req.body.body_en, 4000),
+    body_ar: clean(req.body.body_ar, 4000),
+    date: clean(req.body.date, 20) || new Date().toISOString().slice(0, 10),
+    tag_en: clean(req.body.tag_en, 60) || 'News',
+    tag_ar: clean(req.body.tag_ar, 60) || 'أخبار',
+  };
+
+  const errors = {};
+  if (!item.title_en) errors.title_en = 'English title is required.';
+  if (!item.title_ar) errors.title_ar = 'Arabic title is required.';
+  if (!item.body_en) errors.body_en = 'English body text is required.';
+  if (!item.body_ar) errors.body_ar = 'Arabic body text is required.';
+  if (Object.keys(errors).length) {
+    return res.status(400).json({ ok: false, errors });
+  }
+
+  const record = { id: makeId('news'), ...item, addedAt: new Date().toISOString() };
+  store.appendRuntime('added-news', record);
+  return res.status(201).json({ ok: true, item: record });
+});
+
+// Add an event — appears at the top of GET /api/events and on the website
+app.post('/api/admin/events', requireAdmin, (req, res) => {
+  const item = {
+    title_en: clean(req.body.title_en, 200),
+    title_ar: clean(req.body.title_ar, 200),
+    body_en: clean(req.body.body_en, 4000),
+    body_ar: clean(req.body.body_ar, 4000),
+    date_label_en: clean(req.body.date_label_en, 120) || 'Date to be added',
+    date_label_ar: clean(req.body.date_label_ar, 120) || 'يُحدد التاريخ لاحقاً',
+  };
+
+  const errors = {};
+  if (!item.title_en) errors.title_en = 'English title is required.';
+  if (!item.title_ar) errors.title_ar = 'Arabic title is required.';
+  if (!item.body_en) errors.body_en = 'English body text is required.';
+  if (!item.body_ar) errors.body_ar = 'Arabic body text is required.';
+  if (Object.keys(errors).length) {
+    return res.status(400).json({ ok: false, errors });
+  }
+
+  const record = { id: makeId('event'), ...item, addedAt: new Date().toISOString() };
+  store.appendRuntime('added-events', record);
+  return res.status(201).json({ ok: true, item: record });
 });
 
 // ---------- Fallbacks ----------
