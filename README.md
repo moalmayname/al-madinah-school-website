@@ -9,7 +9,9 @@ forms, and a rich animated frontend (3D hero cube, tilt cards, parallax, counter
 
 **Phone:** +967 770 525 885
 
-> **Placeholder data note:** Contact details (email), teacher names/photos,
+**Email:** wesportsperfect@gmail.com
+
+> **Placeholder data note:** Teacher names/photos,
 > gallery photos, testimonials and event dates are **sample placeholders** — the school
 > still needs to supply the real details. Nothing on the site invents a real
 > phone number or enrolment figures; the stat counters use only generic values
