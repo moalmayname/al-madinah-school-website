@@ -36,6 +36,12 @@ function readRuntime(name) {
   }
 }
 
+// NOTE on concurrency: every operation in this module is synchronous by
+// design. appendRuntime's read -> push -> write runs as one uninterruptible
+// block on Node's single thread, so concurrent requests in this process
+// cannot interleave and lose records. Do NOT convert these helpers to async
+// fs calls without adding a serialisation queue first — that would
+// introduce exactly the race this design avoids.
 function appendRuntime(name, record) {
   fs.mkdirSync(RUNTIME_DIR, { recursive: true });
   const items = readRuntime(name);

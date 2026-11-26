@@ -14,6 +14,7 @@
  *                      (demo default below — CHANGE IT in production!)
  */
 const path = require('path');
+const crypto = require('crypto');
 const express = require('express');
 const store = require('./store');
 
@@ -53,14 +54,47 @@ function makeId(prefix) {
   return `${prefix}-${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
 }
 
+// Constant-time token comparison, so response timing does not leak how much
+// of the token was correct. timingSafeEqual throws when the buffers differ in
+// length, so guard that first and treat a length mismatch as a plain failure.
+function tokenMatches(provided) {
+  const a = Buffer.from(provided);
+  const b = Buffer.from(ADMIN_TOKEN);
+  if (a.length !== b.length) return false;
+  return crypto.timingSafeEqual(a, b);
+}
+
 // Admin guard: the caller must send the ADMIN_TOKEN in the x-admin-token header.
 function requireAdmin(req, res, next) {
   const token = req.get('x-admin-token');
-  if (!token || token !== ADMIN_TOKEN) {
+  if (!token || !tokenMatches(token)) {
     return res.status(401).json({ ok: false, error: 'Unauthorized — missing or invalid x-admin-token header.' });
   }
   return next();
 }
+
+// Basic in-memory rate limiting (per IP, fixed window) — no external deps.
+// Counters live in process memory only, which is fine for a small school site.
+function rateLimit({ windowMs, max }) {
+  const hits = new Map(); // ip -> { count, windowStart }
+  return (req, res, next) => {
+    const now = Date.now();
+    const ip = req.ip || 'unknown';
+    let entry = hits.get(ip);
+    if (!entry || now - entry.windowStart >= windowMs) {
+      entry = { count: 0, windowStart: now };
+      hits.set(ip, entry);
+    }
+    entry.count += 1;
+    if (entry.count > max) {
+      return res.status(429).json({ ok: false, error: 'Too many requests — please try again later.' });
+    }
+    return next();
+  };
+}
+
+const formLimiter = rateLimit({ windowMs: 10 * 60 * 1000, max: 20 }); // contact + admissions posts
+const adminLimiter = rateLimit({ windowMs: 10 * 60 * 1000, max: 60 }); // dashboard polls several endpoints
 
 // ---------- Public content API (seed data) ----------
 app.get('/api/health', (req, res) => {
@@ -75,7 +109,7 @@ app.get('/api/gallery', (req, res) => res.json(store.readSeed('gallery')));
 app.get('/api/stats', (req, res) => res.json(store.readSeed('stats')));
 
 // ---------- Contact form ----------
-app.post('/api/contact', (req, res) => {
+app.post('/api/contact', formLimiter, (req, res) => {
   const name = clean(req.body.name, 120);
   const email = clean(req.body.email, 160);
   const phone = clean(req.body.phone, 40);
@@ -95,7 +129,7 @@ app.post('/api/contact', (req, res) => {
 });
 
 // ---------- Admissions form ----------
-app.post('/api/admissions', (req, res) => {
+app.post('/api/admissions', formLimiter, (req, res) => {
   const studentName = clean(req.body.studentName, 120);
   const level = clean(req.body.level, 20);
   const guardianName = clean(req.body.guardianName, 120);
@@ -131,6 +165,7 @@ app.post('/api/admissions', (req, res) => {
 });
 
 // ---------- Admin (token protected, used by public/admin.html) ----------
+app.use('/api/admin', adminLimiter);
 
 // Review form submissions
 app.get('/api/admin/submissions', requireAdmin, (req, res) => {
@@ -203,6 +238,22 @@ app.use((err, req, res, next) => {
   return res.status(500).json({ ok: false, error: 'Internal server error.' });
 });
 
-app.listen(PORT, () => {
-  console.log(`Al-Madinah School website running at http://localhost:${PORT}`);
-});
+// Only start listening when run directly (`npm start`). Tests and tooling can
+// require() this file to get the app without opening a port.
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Al-Madinah School website running at http://localhost:${PORT}`);
+    if (!process.env.ADMIN_TOKEN) {
+      console.warn('');
+      console.warn('============================================================');
+      console.warn('  WARNING: ADMIN_TOKEN is not set.');
+      console.warn('  The DEMO admin token is active — anyone who knows it can');
+      console.warn('  use the admin endpoints. Set a private ADMIN_TOKEN');
+      console.warn('  environment variable before using this in production.');
+      console.warn('============================================================');
+      console.warn('');
+    }
+  });
+}
+
+module.exports = app;
