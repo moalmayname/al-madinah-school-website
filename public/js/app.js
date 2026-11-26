@@ -96,7 +96,11 @@
 
   function renderTeachers() {
     document.getElementById('teachersGrid').innerHTML = data.teachers.map(function (t) {
-      return '<article class="card tilt"><div class="icon">' + esc(t.icon || '👩‍🏫') + '</div>' +
+      var imgUrl = typeof t.image === 'string' && /^(https?:\/\/|\/uploads\/)/i.test(t.image) ? t.image : '';
+      var avatar = imgUrl
+        ? '<img class="teacher-photo" src="' + esc(imgUrl) + '" alt="' + esc(field(t, 'name')) + '" loading="lazy">'
+        : '<div class="icon">' + esc(t.icon || '👩‍🏫') + '</div>';
+      return '<article class="card tilt">' + avatar +
         '<h3>' + esc(field(t, 'name')) + '</h3><p class="role">' + esc(field(t, 'role')) + '</p>' +
         '<p>' + esc(field(t, 'bio')) + '</p></article>';
     }).join('');
@@ -430,6 +434,11 @@
   });
 
   /* ---------------- Init ---------------- */
+  document.querySelectorAll('input[type="date"]').forEach(function (inp) {
+    inp.addEventListener('click', function () {
+      try { if (inp.showPicker) inp.showPicker(); } catch (e) {}
+    });
+  });
   applyLang();
   afShowStep();
   bindTilt();

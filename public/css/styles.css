@@ -97,6 +97,7 @@ section h2::after{content:"";display:block;width:74px;height:4px;background:line
 .card:hover{box-shadow:var(--shadow-lg)}
 .card.gold-top{border-top-color:var(--gold)}
 .card .icon{font-size:2.3rem;margin-bottom:12px}
+.card .teacher-photo{width:84px;height:84px;border-radius:50%;object-fit:cover;border:3px solid var(--gold);margin-bottom:12px;display:block;box-shadow:0 6px 16px rgba(18,53,36,.15)}
 .card h3{color:var(--green);margin-bottom:8px}
 .card p{line-height:1.75;color:var(--muted)}
 .card .role{color:var(--gold);font-weight:700;margin-bottom:6px}
@@ -178,6 +179,7 @@ section h2::after{content:"";display:block;width:74px;height:4px;background:line
 .step-line{flex:1;min-width:24px;height:2px;background:#e4dcc3}
 form label{display:block;font-weight:600;margin-bottom:14px;color:var(--ink)}
 form input,form select,form textarea{width:100%;padding:12px 14px;border-radius:10px;border:1.5px solid #ddd3ae;margin-top:6px;font:inherit;background:#fffdf6;transition:border-color .2s, box-shadow .2s}
+form input[type="date"]{cursor:pointer}
 form input:focus,form select:focus,form textarea:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(15,138,76,.18)}
 form input.invalid,form select.invalid{border-color:#c0392b;box-shadow:0 0 0 3px rgba(192,57,43,.15)}
 .form-nav{display:flex;gap:12px;justify-content:space-between;margin-top:8px;flex-wrap:wrap}

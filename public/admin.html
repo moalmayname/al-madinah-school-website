@@ -51,10 +51,15 @@
   .login-wrap h2{font-size:22px;margin-bottom:6px;color:var(--green-dark)}
   .login-wrap p{color:var(--muted);font-size:14.5px;line-height:1.55;margin-bottom:18px}
   label{display:block;font-size:13.5px;font-weight:600;margin:14px 0 6px;color:var(--green-dark)}
-  input[type=text],input[type=password],input[type=date],textarea,select{
+  input[type=text],input[type=password],input[type=date],input[type=url],input[type=file],textarea,select{
     width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;
     font:inherit;font-size:15px;background:#fff;color:var(--ink);
   }
+  input[type=date]{cursor:pointer}
+  .hint{color:var(--muted);font-size:13px;margin-top:5px}
+  .preview-wrap{display:flex;align-items:center;gap:14px;margin-top:10px}
+  .teacher-thumb{width:68px;height:68px;border-radius:50%;object-fit:cover;border:2.5px solid var(--gold);background:#eef5ee;flex:0 0 auto}
+  .content-teacher{display:flex;align-items:flex-start;gap:14px}
   input:focus,textarea:focus{outline:2px solid var(--gold);border-color:var(--gold)}
   textarea{resize:vertical;min-height:90px}
   .btn{
@@ -152,6 +157,7 @@
       <button class="tab-btn active" data-tab="overview" type="button">Overview</button>
       <button class="tab-btn" data-tab="admissions" type="button">Admissions</button>
       <button class="tab-btn" data-tab="messages" type="button">Messages</button>
+      <button class="tab-btn" data-tab="addteacher" type="button">Add Teacher</button>
       <button class="tab-btn" data-tab="addnews" type="button">Add News</button>
       <button class="tab-btn" data-tab="addevent" type="button">Add Event</button>
       <button class="tab-btn" data-tab="content" type="button">Content</button>
@@ -162,6 +168,7 @@
       <div class="stat-grid">
         <div class="stat-card"><div class="num" id="countAdmissions">–</div><div class="lbl">📋 Admission applications</div></div>
         <div class="stat-card"><div class="num" id="countMessages">–</div><div class="lbl">✉️ Contact messages</div></div>
+        <div class="stat-card"><div class="num" id="countTeachers">–</div><div class="lbl">👩‍🏫 Teachers (live)</div></div>
         <div class="stat-card"><div class="num" id="countNews">–</div><div class="lbl">📰 News items (live)</div></div>
         <div class="stat-card"><div class="num" id="countEvents">–</div><div class="lbl">📅 Events (live)</div></div>
       </div>
@@ -192,6 +199,43 @@
             <tbody id="messagesBody"></tbody>
           </table>
         </div>
+      </div>
+    </div>
+
+    <!-- Add Teacher -->
+    <div class="panel hidden" id="panel-addteacher">
+      <div class="card">
+        <h2>Add a teacher</h2>
+        <p class="sub">The teacher profile and photo appear at the top of the Teachers section on the website, in both languages.</p>
+        <form id="teacherForm">
+          <div class="two-col">
+            <div><label for="t_name_en">Name (English) *</label><input type="text" id="t_name_en" required maxlength="160"></div>
+            <div><label for="t_name_ar">Name (Arabic) *</label><input type="text" id="t_name_ar" dir="rtl" required maxlength="160"></div>
+            <div><label for="t_role_en">Role / Subject (English) *</label><input type="text" id="t_role_en" required maxlength="160" placeholder="e.g. Science Teacher"></div>
+            <div><label for="t_role_ar">Role / Subject (Arabic) *</label><input type="text" id="t_role_ar" dir="rtl" required maxlength="160" placeholder="مثال: معلم العلوم"></div>
+            <div>
+              <label for="t_image_file">Teacher photo (upload image)</label>
+              <input type="file" id="t_image_file" accept="image/png,image/jpeg,image/webp,image/gif">
+              <div class="hint">PNG, JPG, WEBP, or GIF up to 3 MB.</div>
+            </div>
+            <div>
+              <label for="t_image_url">Or image URL (optional)</label>
+              <input type="url" id="t_image_url" maxlength="1000" placeholder="https://example.com/photo.jpg">
+              <label for="t_icon">Fallback icon emoji</label>
+              <input type="text" id="t_icon" maxlength="16" placeholder="👩‍🏫">
+            </div>
+          </div>
+          <div id="t_preview_wrap" class="preview-wrap hidden">
+            <img id="t_preview" class="teacher-thumb" alt="Teacher photo preview">
+            <button type="button" class="btn" id="t_clear_img" style="padding:7px 14px;font-size:13px">Remove photo</button>
+          </div>
+          <label for="t_bio_en">Bio (English) *</label>
+          <textarea id="t_bio_en" required maxlength="2000"></textarea>
+          <label for="t_bio_ar">Bio (Arabic) *</label>
+          <textarea id="t_bio_ar" dir="rtl" required maxlength="2000"></textarea>
+          <button class="btn gold" type="submit">Publish teacher</button>
+          <div id="teacherMsg"></div>
+        </form>
       </div>
     </div>
 
@@ -228,9 +272,10 @@
           <div class="two-col">
             <div><label for="e_title_en">Title (English) *</label><input type="text" id="e_title_en" required maxlength="200"></div>
             <div><label for="e_title_ar">Title (Arabic) *</label><input type="text" id="e_title_ar" dir="rtl" required maxlength="200"></div>
-            <div><label for="e_date_label_en">Date label (English)</label><input type="text" id="e_date_label_en" maxlength="120" placeholder="e.g. 12 December 2026"></div>
-            <div><label for="e_date_label_ar">Date label (Arabic)</label><input type="text" id="e_date_label_ar" dir="rtl" maxlength="120" placeholder="مثال: ١٢ ديسمبر ٢٠٢٦"></div>
           </div>
+          <label for="e_date">Event date (calendar)</label>
+          <input type="date" id="e_date">
+          <div class="hint" id="e_date_preview">Optional — leave empty for “Date to be added / يُحدد التاريخ لاحقاً”.</div>
           <label for="e_body_en">Text (English) *</label>
           <textarea id="e_body_en" required maxlength="4000"></textarea>
           <label for="e_body_ar">Text (Arabic) *</label>
@@ -246,7 +291,9 @@
       <div class="card">
         <h2>Live content</h2>
         <p class="sub">Everything currently shown on the website — seed content plus anything added here.</p>
-        <h3 style="color:var(--green-dark);margin:14px 0 10px">📰 News</h3>
+        <h3 style="color:var(--green-dark);margin:14px 0 10px">👩‍🏫 Teachers</h3>
+        <div id="contentTeachers"></div>
+        <h3 style="color:var(--green-dark);margin:22px 0 10px">📰 News</h3>
         <div id="contentNews"></div>
         <h3 style="color:var(--green-dark);margin:22px 0 10px">📅 Events</h3>
         <div id="contentEvents"></div>
@@ -272,6 +319,9 @@
       { id: 'demo2', reference: 'ADM-2026-DEMO02', studentName: 'Demo Student Two', level: 'secondary', guardianName: 'Demo Guardian', guardianPhone: '', guardianEmail: 'demo2@example.com', receivedAt: '2026-11-23T11:30:00.000Z' }
     ]
   };
+  var SAMPLE_TEACHERS = [
+    { id: 'demo-t1', name_en: 'Sample Teacher (demo)', name_ar: 'معلم تجريبي (عرض)', role_en: 'Science Teacher', role_ar: 'معلم العلوم', bio_en: 'Demo data — real teachers appear here when the server is running.', bio_ar: 'بيانات تجريبية — يظهر المعلمون الحقيقيون هنا عند تشغيل الخادم.', icon: '👩‍🏫', image: '' }
+  ];
   var SAMPLE_NEWS = [
     { id: 'demo-n1', title_en: 'Sample news item (demo)', title_ar: 'خبر تجريبي (عرض)', body_en: 'Demo data — real news items appear here when the server is running.', body_ar: 'بيانات تجريبية — تظهر الأخبار الحقيقية هنا عند تشغيل الخادم.', date: '2026-11-20', tag_en: 'News', tag_ar: 'أخبار' }
   ];
@@ -283,8 +333,10 @@
   var token = '';
   var demoMode = false;
   var submissions = { contactMessages: [], applications: [] };
+  var teacherItems = [];
   var newsItems = [];
   var eventItems = [];
+  var teacherImageData = '';
 
   // ---------------- Helpers ----------------
   function $(id) { return document.getElementById(id); }
@@ -342,6 +394,7 @@
     $('demoBadge').classList.toggle('hidden', !demo);
     if (demo) {
       submissions = SAMPLE_SUBMISSIONS;
+      teacherItems = SAMPLE_TEACHERS;
       newsItems = SAMPLE_NEWS;
       eventItems = SAMPLE_EVENTS;
       renderAll();
@@ -366,11 +419,13 @@
   // ---------------- Data loading ----------------
   function loadContent() {
     Promise.all([
+      fetch('/api/teachers').then(function (r) { return r.ok ? r.json() : []; }).catch(function () { return []; }),
       fetch('/api/news').then(function (r) { return r.ok ? r.json() : []; }).catch(function () { return []; }),
       fetch('/api/events').then(function (r) { return r.ok ? r.json() : []; }).catch(function () { return []; })
     ]).then(function (results) {
-      newsItems = results[0] || [];
-      eventItems = results[1] || [];
+      teacherItems = results[0] || [];
+      newsItems = results[1] || [];
+      eventItems = results[2] || [];
       renderAll();
     });
   }
@@ -379,6 +434,7 @@
   function renderAll() {
     $('countAdmissions').textContent = submissions.applications.length;
     $('countMessages').textContent = submissions.contactMessages.length;
+    $('countTeachers').textContent = teacherItems.length;
     $('countNews').textContent = newsItems.length;
     $('countEvents').textContent = eventItems.length;
 
@@ -403,6 +459,18 @@
           '<td>' + esc(m.message) + '</td><td>' + fmtDate(m.receivedAt) + '</td></tr>';
       }).join('');
     }
+
+    $('contentTeachers').innerHTML = teacherItems.length ? teacherItems.map(function (t) {
+      var img = typeof t.image === 'string' && /^(https?:\/\/|\/uploads\/)/i.test(t.image) ? t.image : '';
+      var avatar = img
+        ? '<img class="teacher-thumb" src="' + esc(img) + '" alt="' + esc(t.name_en) + '">'
+        : '<span style="font-size:34px;line-height:1;width:68px;text-align:center;flex:0 0 auto">' + esc(t.icon || '👩‍🏫') + '</span>';
+      return '<div class="content-item content-teacher">' + avatar +
+        '<div><h3>' + esc(t.name_en) + '</h3>' +
+        '<div class="ar-title" dir="rtl" style="text-align:right">' + esc(t.name_ar) + '</div>' +
+        '<div class="meta">' + esc(t.role_en) + ' • ' + esc(t.role_ar) + '</div>' +
+        '<p>' + esc(t.bio_en) + '</p></div></div>';
+    }).join('') : '<p class="empty">No teachers.</p>';
 
     $('contentNews').innerHTML = newsItems.length ? newsItems.map(function (n) {
       return '<div class="content-item"><h3>' + esc(n.title_en) + '</h3>' +
@@ -467,6 +535,97 @@
       .catch(function () { showMsg(box, 'error', '✗ Could not reach the server. Is it still running?'); });
   });
 
+  function formatEventDate(iso) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(iso || '')) return null;
+    var d = new Date(iso + 'T00:00:00Z');
+    if (isNaN(d.getTime())) return null;
+    return {
+      en: new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(d),
+      ar: new Intl.DateTimeFormat('ar-EG', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(d)
+    };
+  }
+
+  function clearTeacherPreview() {
+    teacherImageData = '';
+    $('t_image_file').value = '';
+    $('t_preview').removeAttribute('src');
+    $('t_preview_wrap').classList.add('hidden');
+  }
+
+  $('t_image_file').addEventListener('change', function (e) {
+    var file = e.target.files && e.target.files[0];
+    var box = $('teacherMsg');
+    box.innerHTML = '';
+    if (!file) { clearTeacherPreview(); return; }
+    if (!/^image\/(png|jpeg|jpg|webp|gif)$/i.test(file.type)) {
+      clearTeacherPreview();
+      showMsg(box, 'error', '✗ Please select a PNG, JPG, WEBP, or GIF image.');
+      return;
+    }
+    if (file.size > 3 * 1024 * 1024) {
+      clearTeacherPreview();
+      showMsg(box, 'error', '✗ Image is too large (max 3 MB).');
+      return;
+    }
+    var reader = new FileReader();
+    reader.onload = function () {
+      teacherImageData = String(reader.result || '');
+      $('t_preview').src = teacherImageData;
+      $('t_preview_wrap').classList.remove('hidden');
+    };
+    reader.readAsDataURL(file);
+  });
+
+  $('t_clear_img').addEventListener('click', clearTeacherPreview);
+
+  $('e_date').addEventListener('change', function () {
+    var labels = formatEventDate($('e_date').value);
+    $('e_date_preview').textContent = labels
+      ? 'Will display as: ' + labels.en + ' • ' + labels.ar
+      : 'Optional — leave empty for “Date to be added / يُحدد التاريخ لاحقاً”.';
+  });
+
+  document.querySelectorAll('input[type="date"]').forEach(function (inp) {
+    inp.addEventListener('click', function () {
+      try { if (inp.showPicker) inp.showPicker(); } catch (e) {}
+    });
+  });
+
+  $('teacherForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var box = $('teacherMsg');
+    if (demoMode) {
+      showMsg(box, 'warn', 'Demo mode — this was NOT saved. Start the server (npm start) and open the dashboard through it to publish for real.');
+      return;
+    }
+    var payload = {
+      name_en: $('t_name_en').value, name_ar: $('t_name_ar').value,
+      role_en: $('t_role_en').value, role_ar: $('t_role_ar').value,
+      bio_en: $('t_bio_en').value, bio_ar: $('t_bio_ar').value,
+      icon: $('t_icon').value,
+      imageData: teacherImageData,
+      imageUrl: $('t_image_url').value
+    };
+    api('/api/admin/teachers', { method: 'POST', body: JSON.stringify(payload) })
+      .then(function (res) {
+        return res.json().then(function (data) { return { status: res.status, data: data }; });
+      })
+      .then(function (r) {
+        if (r.status === 201) {
+          showMsg(box, 'success', '✓ Teacher published — it is now at the top of the Teachers section on the website.');
+          e.target.reset();
+          clearTeacherPreview();
+          loadContent();
+        } else if (r.status === 401) {
+          showMsg(box, 'error', '✗ Session expired or token invalid — please log out and log in again.');
+        } else {
+          var errs = r.data && r.data.errors ? Object.values(r.data.errors).join(' ') : 'Please check the form and try again.';
+          showMsg(box, 'error', '✗ Could not publish: ' + errs);
+        }
+      })
+      .catch(function () { showMsg(box, 'error', '✗ Could not reach the server. Is it still running?'); });
+  });
+
   $('eventForm').addEventListener('submit', function (e) {
     e.preventDefault();
     var box = $('eventMsg');
@@ -474,10 +633,14 @@
       showMsg(box, 'warn', 'Demo mode — this was NOT saved. Start the server (npm start) and open the dashboard through it to publish for real.');
       return;
     }
+    var isoDate = $('e_date').value;
+    var labels = formatEventDate(isoDate);
     var payload = {
       title_en: $('e_title_en').value, title_ar: $('e_title_ar').value,
       body_en: $('e_body_en').value, body_ar: $('e_body_ar').value,
-      date_label_en: $('e_date_label_en').value, date_label_ar: $('e_date_label_ar').value
+      date: isoDate,
+      date_label_en: labels ? labels.en : '',
+      date_label_ar: labels ? labels.ar : ''
     };
     api('/api/admin/events', { method: 'POST', body: JSON.stringify(payload) })
       .then(function (res) {
@@ -487,6 +650,7 @@
         if (r.status === 201) {
           showMsg(box, 'success', '✓ Event published — it is now at the top of the Events list on the website.');
           e.target.reset();
+          $('e_date_preview').textContent = 'Optional — leave empty for “Date to be added / يُحدد التاريخ لاحقاً”.';
           loadContent();
         } else if (r.status === 401) {
           showMsg(box, 'error', '✗ Session expired or token invalid — please log out and log in again.');

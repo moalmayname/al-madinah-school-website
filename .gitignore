@@ -1,8 +1,9 @@
 # Dependencies
 node_modules/
 
-# Runtime data (form submissions collected by the server — never commit these)
+# Runtime data (form submissions and uploads collected by the server — never commit these)
 server/data/runtime/*.json
+server/data/runtime/uploads/
 !server/data/runtime/.gitkeep
 
 # Environment
